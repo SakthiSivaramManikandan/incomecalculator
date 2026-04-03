@@ -17,9 +17,17 @@ let editIndex = null;
 // Render entries and update totals
 function renderEntries(filter = "all") {
   entryList.innerHTML = "";
+
   let totalIncome = 0;
   let totalExpense = 0;
 
+  // ✅ First: calculate totals from ALL entries
+  entries.forEach(entry => {
+    if (entry.type === "income") totalIncome += Number(entry.amount);
+    if (entry.type === "expense") totalExpense += Number(entry.amount);
+  });
+
+  // ✅ Then: render only filtered entries
   entries.forEach((entry, index) => {
     if (filter !== "all" && entry.type !== filter) return;
 
@@ -33,11 +41,9 @@ function renderEntries(filter = "all") {
       </div>
     `;
     entryList.appendChild(li);
-
-    if (entry.type === "income") totalIncome += Number(entry.amount);
-    if (entry.type === "expense") totalExpense += Number(entry.amount);
   });
 
+  // ✅ Update totals (always full data)
   totalIncomeEl.textContent = totalIncome.toFixed(2);
   totalExpenseEl.textContent = totalExpense.toFixed(2);
   netBalanceEl.textContent = (totalIncome - totalExpense).toFixed(2);
